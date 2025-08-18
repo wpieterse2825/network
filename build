@@ -1,0 +1,11 @@
+#!/bin/bash
+
+clear
+
+mkdir -p out
+pushd out
+
+cmake -G Ninja ../
+cmake --build .
+
+popd

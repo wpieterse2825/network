@@ -1,0 +1,5 @@
+#!/bin/bash
+
+clear
+
+docker build -t wpieterse2825-network .

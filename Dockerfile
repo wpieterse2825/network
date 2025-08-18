@@ -1,18 +1,36 @@
-# Use a base image with a C++ build environment
-FROM ubuntu:22.04
+# Stage 1: Build Environment
+# Use a C++ builder image with CMake and a compiler
+FROM alpine:latest AS build
 
-# Install necessary tools and libraries
-RUN apt-get update && \
-    apt-get install -y build-essential cmake ninja-build
+# Install build dependencies
+RUN apk add --no-cache g++ cmake make
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy your project's source code into the container
-COPY . /app
+# Copy the source code
+COPY . .
 
-# Create a build directory and build the project
-RUN mkdir out && \
-    cd out && \
-    cmake -G Ninja .. && \
-    cmake --build .
+# Configure and build the application using CMake
+RUN mkdir -p out
+RUN cd out && cmake -DCMAKE_BUILD_TYPE=Release ..
+RUN cd out && make
+
+# Stage 2: Final Runtime Environment
+# Use a minimal Alpine image for the final container
+FROM alpine:latest
+
+# Install the C++ standard library runtime
+RUN apk add --no-cache libstdc++
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the compiled executable from the 'build' stage
+COPY --from=build /app/out/hello /app/hello
+
+# Expose the UDP port for network interactions
+EXPOSE 8080/udp
+
+# Command to run the application
+CMD ["./hello"]

@@ -1,1 +1,5 @@
 /out
+/bazel-bin
+/bazel-network
+/bazel-out
+/bazel-testlogs

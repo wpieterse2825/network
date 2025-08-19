@@ -1,5 +1,0 @@
-#!/bin/bash
-
-docker tag wpieterse2825-network:latest africa-south1-docker.pkg.dev/wpieterse2825-home/experiments/network:latest
-
-docker push africa-south1-docker.pkg.dev/wpieterse2825-home/experiments/network:latest
